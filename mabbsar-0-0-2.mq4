@@ -1,3 +1,11 @@
+//+------------------------------------------------------------------+
+//|                                                         pugarjay |
+//|                                             https://www.mql5.com |
+//+------------------------------------------------------------------+
+#property copyright "pugarjay"
+#property version   "1.00"
+#property strict
+
 // Expert Advisor properties
 input int FastMAPeriod = 5;  // Period for the fast Moving Average
 input int SlowMAPeriod = 20; // Period for the slow Moving Average
@@ -28,7 +36,7 @@ void OnTick()
     
     double currentSAR = iSAR(NULL, 0, SARStep, SARMaximum, 0);
     
-    int slippage = 3; // Define slippage here
+    int slippage = 5; // Increased slippage to avoid error 130
 
     if (currentFastMA > currentSlowMA && lastFastMA <= lastSlowMA && lastSignal != 1)
     {
@@ -37,8 +45,8 @@ void OnTick()
         if (OrdersTotal() == 0) // Check if there are no open orders
         {
             double buyPrice = Ask;
-            double buyStopLoss = buyPrice - StopLoss * Point;
-            double buyTakeProfit = buyPrice + TakeProfit * Point;
+            double buyStopLoss = buyPrice - (StopLoss + 10) * Point; // Adjusted Stop Loss level with additional distance
+            double buyTakeProfit = buyPrice + (TakeProfit + 10) * Point; // Adjusted Take Profit level with additional distance
             
             int buyTicket = OrderSend(Symbol(), OP_BUY, 0.1, buyPrice, slippage, buyStopLoss, buyTakeProfit, "Buy Order", 0, Blue);
             if (buyTicket > 0) {
@@ -55,8 +63,8 @@ void OnTick()
         if (OrdersTotal() == 0) // Check if there are no open orders
         {
             double sellPrice = Bid;
-            double sellStopLoss = sellPrice + StopLoss * Point;
-            double sellTakeProfit = sellPrice - TakeProfit * Point;
+            double sellStopLoss = sellPrice + (StopLoss + 10) * Point; // Adjusted Stop Loss level with additional distance
+            double sellTakeProfit = sellPrice - (TakeProfit + 10) * Point; // Adjusted Take Profit level with additional distance
             
             int sellTicket = OrderSend(Symbol(), OP_SELL, 0.1, sellPrice, slippage, sellStopLoss, sellTakeProfit, "Sell Order", 0, Red);
             if (sellTicket > 0) {
