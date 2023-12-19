@@ -3,7 +3,15 @@ extern double LotSize = 0.1;
 int ticket;
 
 // Define indicator or price variables
-double indicatorValue;
+double signalValue;
+
+// Function to calculate signal value
+double CalculateSignal(){
+    // Implement your logic to calculate the signal value
+    // This could involve complex calculations or indicator calls
+    double calculatedValue = ...; // Calculate the signal value
+    return calculatedValue;
+}
 
 // Initialization function
 int OnInit(){
@@ -19,18 +27,18 @@ void OnDeinit(const int reason){
 
 // Function to handle new tick events
 void OnTick(){
-    // Get current indicator value or price data
-    indicatorValue = iCustom(NULL, 0, "IndicatorName", 0, 0);
+    // Calculate the signal value using the separate function
+    signalValue = CalculateSignal();
 
-    // Implement trading logic based on the indicator or price
-    if(indicatorValue > 0){
+    // Implement trading logic based on the calculated signal
+    if(signalValue > 0){
         // Open a buy trade
         ticket = OrderSend(Symbol(), OP_BUY, LotSize, Ask, 3, 0, 0, "Buy Order", 0, 0, Green);
         if(ticket > 0){
             // Order opened successfully
             // Implement further actions if needed
         }
-    } else if(indicatorValue < 0){
+    } else if(signalValue < 0){
         // Open a sell trade
         ticket = OrderSend(Symbol(), OP_SELL, LotSize, Bid, 3, 0, 0, "Sell Order", 0, 0, Red);
         if(ticket > 0){
