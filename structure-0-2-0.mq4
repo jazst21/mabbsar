@@ -17,17 +17,6 @@ int ticket;
 
 // Function to calculate SAR signal for opening a position (Buy signal when SAR is above price)
 double CalculateSARSignalOpen() {
-    double sar = iSAR(NULL, 0, SARStep, SARMaximum, SARInitial); // Parabolic SAR
-    double currentPrice = Ask; // Current Ask price
-
-    double sarSignalOpen = 0.0;
-
-    if (sar < currentPrice) {
-        sarSignalOpen = 1.0; // Set a value to indicate a buy signal
-    }
-    if (sar > currentPrice) {
-        sarSignalOpen = -1.0; // Set a value to indicate a buy signal
-    }
 
     return sarSignalOpen;
 }
@@ -43,12 +32,6 @@ double CalculateIchimokuSignalOpen() {
 
     double ichimokuSignalOpen = 0.0; // Initialize the signal
 
-    if (currentPrice > ichimokuTenkanSen && currentPrice < ichimokuKijunSen && currentPrice > ichimokuSenkouA && currentPrice > ichimokuSenkouB) {
-        ichimokuSignalOpen = 1.0; // Set a value to indicate a buy signal
-    } else if (currentPrice < ichimokuTenkanSen && currentPrice > ichimokuKijunSen && currentPrice < ichimokuSenkouA && currentPrice < ichimokuSenkouB) {
-        ichimokuSignalOpen = -1.0; // Set a value to indicate a sell signal
-    }
-
     return ichimokuSignalOpen;
 }
 
@@ -57,16 +40,6 @@ bool CalculateSARSignalClose() {
     double sar = iSAR(NULL, 0, SARStep, SARMaximum, SARInitial); // Parabolic SAR
     double currentPrice = Close[0]; // Current close price
     bool sarSignalClose = false;
-
-    // Condition for price crossover above SAR
-    if (currentPrice > sar && Close[1] < sar) {
-        sarSignalClose = true; // Set to true for a buy crossover
-    }
-
-    // Condition for price crossover below SAR
-    if (currentPrice < sar && Close[1] > sar) {
-        sarSignalClose = true; // Set to true for a sell crossover
-    }
 
     return sarSignalClose;
 }
@@ -79,11 +52,6 @@ bool CalculateIchimokuSignalClose() {
     double currentPrice = Close[0]; // Current close price
 
     bool ichimokuSignalClose = false; // Initialize the signal
-
-    // Condition for price hitting either Span A or Span B
-    if (currentPrice <= ichimokuSenkouSpanA || currentPrice <= ichimokuSenkouSpanB) {
-        ichimokuSignalClose = true; // Set to true for a close signal
-    }
 
     return ichimokuSignalClose;
 }
@@ -108,19 +76,8 @@ double CalculateOpenSignal() {
     double sarSignal = CalculateSARSignalOpen();
     double ichimokuSignal = CalculateIchimokuSignalOpen();
     double openSignal = 0.0;
-
-    // If both SAR and Ichimoku indicate a buy, set buy signal
-    if (sarSignal > 0 && ichimokuSignal > 0) {
-        openSignal = 1.0; // Buy signal
-    }
-    // If both SAR and Ichimoku indicate a sell, set sell signal
-    else if (sarSignal < 0 && ichimokuSignal < 0) {
-        openSignal = -1.0; // Sell signal
-    }
     return openSignal;
 }
-
-// ... (The unchanged part continues below)
 
 int barsSinceLastOrder = 0; // Counter to track bars since the last order
 
